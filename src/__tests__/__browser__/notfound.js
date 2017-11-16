@@ -26,7 +26,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, NotFound} from '../../browser';
 
-test.only('noops', t => {
+test('noops', t => {
   const root = document.createElement('div');
 
   const Hello = () => (
