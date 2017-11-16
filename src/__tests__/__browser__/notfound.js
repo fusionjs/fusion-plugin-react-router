@@ -26,9 +26,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, NotFound} from '../../browser';
 
-test('noops', t => {
+test.only('noops', t => {
   const root = document.createElement('div');
-  const Hello = () => <NotFound><div>Hello</div></NotFound>;
+
+  const Hello = () => (
+    <NotFound>
+      <div>Hello</div>
+    </NotFound>
+  );
   const el = (
     <Router>
       <Route component={Hello} />
