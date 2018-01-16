@@ -22,10 +22,9 @@
 
 import {UniversalEventsToken} from 'fusion-plugin-universal-events';
 import React from 'react';
-import {html, unescape} from 'fusion-core';
+import {withDependencies, withMiddleware, html, unescape} from 'fusion-core';
 import {Router as ServerRouter} from './server';
 import {Router as BrowserRouter} from './browser';
-import {withDependencies, withMiddleware, html, unescape} from 'fusion-core';
 
 const Router = __NODE__ ? ServerRouter : BrowserRouter;
 export default withDependencies({
