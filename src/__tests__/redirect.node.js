@@ -23,7 +23,7 @@
 import test from 'tape-cup';
 import React from 'react';
 import {renderToString as render} from 'react-dom/server';
-import {Router, Route, Redirect} from "../server";
+import {Router, Route, Redirect} from '../server';
 
 test('redirects to a new URL', t => {
   const Hello = () => <div>Hello</div>;

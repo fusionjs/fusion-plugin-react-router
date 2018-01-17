@@ -23,7 +23,7 @@
 import test from 'tape-cup';
 import React from 'react';
 import {renderToString as render} from 'react-dom/server';
-import {Router, Route, Status} from "../server";
+import {Router, Route, Status} from '../server';
 
 test('sets code with static code', t => {
   const Hello = () => (

@@ -24,7 +24,7 @@
 import test from 'tape-cup';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Switch, Route} from "../browser";
+import {Router, Switch, Route} from '../browser';
 
 test('matches as expected', t => {
   const root = document.createElement('div');

@@ -23,7 +23,7 @@
 import test from 'tape-cup';
 import React from 'react';
 import {renderToString as render} from 'react-dom/server';
-import {Router, Switch, Route} from "../server";
+import {Router, Switch, Route} from '../server';
 
 test('matches as expected', t => {
   const Hello = () => <div>Hello</div>;
