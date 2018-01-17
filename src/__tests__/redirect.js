@@ -24,7 +24,7 @@
 import test from 'tape-cup';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, Redirect} from "../browser";
+import {Router, Route, Redirect} from '../browser';
 
 test('test Redirect', t => {
   const root = document.createElement('div');
