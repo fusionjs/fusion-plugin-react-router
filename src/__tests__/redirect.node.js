@@ -23,20 +23,22 @@
 import test from 'tape-cup';
 import React from 'react';
 import {renderToString as render} from 'react-dom/server';
-import {Router, Switch, Route} from '../../server';
+import {Router, Route, Redirect} from "../server";
 
-test('matches as expected', t => {
+test('redirects to a new URL', t => {
   const Hello = () => <div>Hello</div>;
-  const Hi = () => <div>Hi</div>;
+  const Moved = () => <Redirect to="/hello" />;
+  const state = {code: 0};
+  const ctx = state;
   const el = (
-    <Router location="/">
-      <Switch>
-        <Route path="/" component={Hello} />
-        <Route path="/" component={Hi} />
-      </Switch>
+    <Router location="/" context={ctx}>
+      <div>
+        <Route path="/" component={Moved} />
+        <Route path="/hello" component={Hello} />
+      </div>
     </Router>
   );
-  t.ok(/Hello/.test(render(el)), 'matches first');
-  t.ok(!/Hi/.test(render(el)), 'does not match second');
+  render(el);
+  t.equals(state.code, 307, 'sets code');
   t.end();
 });

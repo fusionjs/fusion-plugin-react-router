@@ -23,26 +23,20 @@
 import test from 'tape-cup';
 import React from 'react';
 import {renderToString as render} from 'react-dom/server';
-import {Router, Route, NotFound} from '../../server';
+import {Router, Switch, Route} from "../server";
 
-test('sets code', t => {
-  const Hello = () => (
-    <NotFound>
-      <div>Hello</div>
-    </NotFound>
-  );
-  const state = {code: 0};
-  const ctx = {
-    setCode(code) {
-      state.code = code;
-    },
-  };
+test('matches as expected', t => {
+  const Hello = () => <div>Hello</div>;
+  const Hi = () => <div>Hi</div>;
   const el = (
-    <Router location="/" context={ctx}>
-      <Route component={Hello} />
+    <Router location="/">
+      <Switch>
+        <Route path="/" component={Hello} />
+        <Route path="/" component={Hi} />
+      </Switch>
     </Router>
   );
-  t.ok(/Hello/.test(render(el)), 'matches');
-  t.equals(state.code, 404, 'sets code');
+  t.ok(/Hello/.test(render(el)), 'matches first');
+  t.ok(!/Hi/.test(render(el)), 'does not match second');
   t.end();
 });

@@ -24,30 +24,22 @@
 import test from 'tape-cup';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, Redirect} from '../../browser';
+import {Router, Switch, Route} from "../browser";
 
-test('test Redirect', t => {
+test('matches as expected', t => {
   const root = document.createElement('div');
   const Hello = () => <div>Hello</div>;
-  const Moved = () => <Redirect to="/hello">Hi</Redirect>;
+  const Hi = () => <div>Hi</div>;
   const el = (
     <Router>
-      <div>
-        <Route path="/" component={Moved} />
-        <Route path="/hello" component={Hello} />
-      </div>
+      <Switch>
+        <Route path="/" component={Hello} />
+        <Route path="/" component={Hi} />
+      </Switch>
     </Router>
   );
   ReactDOM.render(el, root);
-  t.ok(/Hello/.test(root.innerHTML), `matches ${root.innerHTML}`);
-  t.equal(window.location.pathname, '/hello');
-
-  // reset the url back to "/"
-  ReactDOM.render(
-    <Router>
-      <Redirect to="/" />
-    </Router>,
-    document.createElement('div')
-  );
+  t.ok(/Hello/.test(root.innerHTML), 'matches first');
+  t.ok(!/Hi/.test(root.innerHTML), 'does not match second');
   t.end();
 });

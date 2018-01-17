@@ -24,29 +24,21 @@
 import test from 'tape-cup';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route} from '../../browser';
+import {Router, Route, Status} from "../browser";
 
-test('matches as expected', t => {
+test('noops', t => {
   const root = document.createElement('div');
-  const Hello = () => <div>Hello</div>;
+  const Hello = () => (
+    <Status code="404">
+      <div>Hello</div>
+    </Status>
+  );
   const el = (
     <Router>
-      <Route path="/" component={Hello} />
+      <Route component={Hello} />
     </Router>
   );
   ReactDOM.render(el, root);
-  t.ok(/Hello/.test(root.innerHTML), 'renders matched route');
-  t.end();
-});
-test('misses as expected', t => {
-  const root = document.createElement('div');
-  const Hello = () => <div>Hello</div>;
-  const el = (
-    <Router>
-      <Route exact path="/bar" component={Hello} />
-    </Router>
-  );
-  ReactDOM.render(el, root);
-  t.ok(!/Hello/.test(root.innerHTML), 'does not render unmatched route');
+  t.ok(/Hello/.test(root.innerHTML), 'matches');
   t.end();
 });
