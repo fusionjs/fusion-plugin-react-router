@@ -20,29 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/* eslint-env browser */
 import test from 'tape-cup';
 import React from 'react';
-import {renderToString as render} from 'react-dom/server';
-import {Router, Route, NotFound} from '../../server';
+import ReactDOM from 'react-dom';
+import {Router, Route, Redirect} from "../browser";
 
-test('sets code', t => {
-  const Hello = () => (
-    <NotFound>
-      <div>Hello</div>
-    </NotFound>
-  );
-  const state = {code: 0};
-  const ctx = {
-    setCode(code) {
-      state.code = code;
-    },
-  };
+test('test Redirect', t => {
+  const root = document.createElement('div');
+  const Hello = () => <div>Hello</div>;
+  const Moved = () => <Redirect to="/hello">Hi</Redirect>;
   const el = (
-    <Router location="/" context={ctx}>
-      <Route component={Hello} />
+    <Router>
+      <div>
+        <Route path="/" component={Moved} />
+        <Route path="/hello" component={Hello} />
+      </div>
     </Router>
   );
-  t.ok(/Hello/.test(render(el)), 'matches');
-  t.equals(state.code, 404, 'sets code');
+  ReactDOM.render(el, root);
+  t.ok(/Hello/.test(root.innerHTML), `matches ${root.innerHTML}`);
+  t.equal(window.location.pathname, '/hello');
+
+  // reset the url back to "/"
+  ReactDOM.render(
+    <Router>
+      <Redirect to="/" />
+    </Router>,
+    document.createElement('div')
+  );
   t.end();
 });

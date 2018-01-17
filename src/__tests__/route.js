@@ -20,25 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/* eslint-env browser */
 import test from 'tape-cup';
 import React from 'react';
-import {renderToString as render} from 'react-dom/server';
-import {Router, Route, Redirect} from '../../server';
+import ReactDOM from 'react-dom';
+import {Router, Route} from "../browser";
 
-test('redirects to a new URL', t => {
+test('matches as expected', t => {
+  const root = document.createElement('div');
   const Hello = () => <div>Hello</div>;
-  const Moved = () => <Redirect to="/hello" />;
-  const state = {code: 0};
-  const ctx = state;
   const el = (
-    <Router location="/" context={ctx}>
-      <div>
-        <Route path="/" component={Moved} />
-        <Route path="/hello" component={Hello} />
-      </div>
+    <Router>
+      <Route path="/" component={Hello} />
     </Router>
   );
-  render(el);
-  t.equals(state.code, 307, 'sets code');
+  ReactDOM.render(el, root);
+  t.ok(/Hello/.test(root.innerHTML), 'renders matched route');
+  t.end();
+});
+test('misses as expected', t => {
+  const root = document.createElement('div');
+  const Hello = () => <div>Hello</div>;
+  const el = (
+    <Router>
+      <Route exact path="/bar" component={Hello} />
+    </Router>
+  );
+  ReactDOM.render(el, root);
+  t.ok(!/Hello/.test(root.innerHTML), 'does not render unmatched route');
   t.end();
 });

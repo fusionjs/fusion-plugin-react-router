@@ -20,23 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/* eslint-env browser */
 import test from 'tape-cup';
 import React from 'react';
-import {renderToString as render} from 'react-dom/server';
-import {Router, Switch, Route} from '../../server';
+import ReactDOM from 'react-dom';
+import {Router, Route, NotFound} from "../browser";
 
-test('matches as expected', t => {
-  const Hello = () => <div>Hello</div>;
-  const Hi = () => <div>Hi</div>;
+test('noops', t => {
+  const root = document.createElement('div');
+
+  const Hello = () => (
+    <NotFound>
+      <div>Hello</div>
+    </NotFound>
+  );
   const el = (
-    <Router location="/">
-      <Switch>
-        <Route path="/" component={Hello} />
-        <Route path="/" component={Hi} />
-      </Switch>
+    <Router>
+      <Route component={Hello} />
     </Router>
   );
-  t.ok(/Hello/.test(render(el)), 'matches first');
-  t.ok(!/Hi/.test(render(el)), 'does not match second');
+  ReactDOM.render(el, root);
+  t.ok(/Hello/.test(root.innerHTML), 'matches');
   t.end();
 });
