@@ -80,7 +80,7 @@ app.register(UniversalEventsToken, UniversalEvents);
 
 Name | Type | Description
 -|-|-
-`UniversalEventsToken` | `UniversalEvents` | An event emitter plugin to emit stats to, such as the one provided by [`fusion-plugin-universal-events`](https://github.com/fusionjs/fusion-plugin-universal-events).
+`UniversalEventsToken` | `UniversalEvents` | An event emitter plugin to emit routing events to, such as the one provided by [`fusion-plugin-universal-events`](https://github.com/fusionjs/fusion-plugin-universal-events).
 
 
 #### `Router`
