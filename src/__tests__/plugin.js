@@ -42,6 +42,7 @@ test('events with trackingId', async t => {
     page: '/',
   });
   app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
   const simulator = setup(app);
   await simulator.render('/');
   cleanup();
@@ -64,6 +65,7 @@ test('events with no tracking id', async t => {
     page: '/',
   });
   app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
   const simulator = setup(app);
   await simulator.render('/');
   cleanup();
@@ -90,6 +92,7 @@ test('events with no tracking id and deep path', async t => {
   });
 
   app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
   const simulator = setup(app);
   await simulator.render('/user/abcd');
   cleanup();
@@ -173,12 +176,22 @@ function getMockEvents({t, title: expectedTitle, page: expectedPage}) {
         t.equal(title, expectedTitle, 'correct title');
         t.equal(page, expectedPage, 'correct page');
         if (__NODE__) {
-          // This returns either 200 or 404
-          // t.equal(status, 200, 'emits status code');
+          t.equal(status, 200, 'emits status code');
           t.equal(typeof timing, 'number', 'emits with the correct value');
         }
       },
     }),
+  });
+}
+
+function getMockBodySetter() {
+  return createPlugin({
+    middleware: () => {
+      return (ctx, next) => {
+        ctx.body = 'mockbody';
+        return next();
+      };
+    },
   });
 }
 
