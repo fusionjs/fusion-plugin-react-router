@@ -46,7 +46,7 @@
     "fusion-core": "0.3.6",
     "fusion-plugin-universal-events": "0.3.4",
     "fusion-react": "0.4.3",
-    "fusion-react-async": "0.2.0",
+    "fusion-react-async": "1.0.0",
     "fusion-test-utils": "0.4.2",
     "fusion-tokens": "0.0.6",
     "nyc": "11.4.1",
