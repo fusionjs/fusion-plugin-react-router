@@ -17,6 +17,7 @@ export default createPlugin({
   },
   middleware: ({emitter}) => {
     return (ctx, next) => {
+      const prefix = ctx.prefix || '';
       if (!ctx.element) {
         return next();
       }
@@ -35,8 +36,8 @@ export default createPlugin({
             onRoute={d => {
               pageData = d;
             }}
-            basename={ctx.routePrefix}
-            location={ctx.url}
+            basename={prefix}
+            location={prefix + ctx.url}
             context={context}
           >
             {ctx.element}
@@ -57,13 +58,15 @@ export default createPlugin({
             });
           };
           emitter.map(payload => {
-            if (payload) {
+            if (payload && typeof payload === 'object') {
               payload.__url__ = pageData.title;
             }
             return payload;
           });
-          ctx.timing.render.then(emitTiming('render:server'));
-          ctx.timing.end.then(emitTiming('pageview:server'));
+          ctx.timing.end.then(timing => {
+            emitTiming('pageview:server')(timing);
+            ctx.timing.render.then(emitTiming('render:server'));
+          });
         });
       } else if (__BROWSER__) {
         // TODO(#3): We should consider adding render/downstream/upstream timings for the browser
@@ -73,14 +76,14 @@ export default createPlugin({
           pageData = JSON.parse(unescape(element.textContent));
         }
         emitter.map(payload => {
-          if (payload) {
+          if (payload && typeof payload === 'object') {
             payload.__url__ = pageData.title;
           }
           return payload;
         });
         ctx.element = (
           <Router
-            basename={ctx.routePrefix}
+            basename={ctx.prefix}
             onRoute={payload => {
               pageData = payload;
               emitter.emit('pageview:browser', payload);

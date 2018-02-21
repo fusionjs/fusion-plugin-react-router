@@ -9,13 +9,26 @@ import {UniversalEventsToken} from 'fusion-plugin-universal-events';
 import {createPlugin} from 'fusion-core';
 import App from 'fusion-react';
 import {getSimulator} from 'fusion-test-utils';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import test from 'tape-cup';
 import {Route} from '../modules/Route';
 import RouterPlugin from '../plugin';
 
+const addRoutePrefix = (ctx, next) => {
+  // hack until we have better route prefix support in fusion-test-utils
+  ctx.prefix = '/test';
+  return next();
+};
+
 function getApp(el) {
   const app = new App(el);
+  app.register(RouterPlugin);
+  return app;
+}
+
+function getPrefixApp(el) {
+  const app = new App(el);
+  app.middleware(addRoutePrefix);
   app.register(RouterPlugin);
   return app;
 }
@@ -42,6 +55,7 @@ test('events with trackingId', async t => {
     page: '/',
   });
   app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
   const simulator = setup(app);
   await simulator.render('/');
   cleanup();
@@ -64,6 +78,30 @@ test('events with no tracking id', async t => {
     page: '/',
   });
   app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
+  const simulator = setup(app);
+  await simulator.render('/');
+  cleanup();
+  t.end();
+});
+
+test('events with no tracking id and route prefix', async t => {
+  const Hello = () => <div>Hello</div>;
+  const element = (
+    <div>
+      <Route path="/" component={Hello} />
+      <Route path="/lol" component={Hello} />
+    </div>
+  );
+
+  const app = getPrefixApp(element);
+  const UniversalEvents = getMockEvents({
+    t,
+    title: '/',
+    page: '/',
+  });
+  app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
   const simulator = setup(app);
   await simulator.render('/');
   cleanup();
@@ -72,6 +110,7 @@ test('events with no tracking id', async t => {
 
 test('events with no tracking id and deep path', async t => {
   const Hello = () => <div>Hello</div>;
+  const NotHere = () => <div>NotHere</div>;
   if (__BROWSER__) {
     return t.end();
   }
@@ -79,6 +118,8 @@ test('events with no tracking id and deep path', async t => {
     <div>
       <Route path="/user" component={Hello} />
       <Route path="/user/:uuid" component={Hello} />
+      <Route path="/lol" component={NotHere} />
+      <Link to="/lol" />
     </div>
   );
 
@@ -90,8 +131,52 @@ test('events with no tracking id and deep path', async t => {
   });
 
   app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
   const simulator = setup(app);
-  await simulator.render('/user/abcd');
+  const ctx = await simulator.render('/user/abcd');
+
+  t.ok(ctx.rendered.includes('href="/lol"'), 'sets links correctly');
+  t.ok(
+    ctx.rendered.includes('<div>Hello</div><div>Hello</div>'),
+    'matches both user routes'
+  );
+  t.ok(!ctx.rendered.includes('NotHere'), 'does not match not here route');
+  cleanup();
+  t.end();
+});
+
+test('events with no tracking id and deep path and route prefix', async t => {
+  const Hello = () => <div>Hello</div>;
+  const NotHere = () => <div>NotHere</div>;
+  if (__BROWSER__) {
+    return t.end();
+  }
+  const element = (
+    <div>
+      <Route path="/user" component={Hello} />
+      <Route path="/user/:uuid" component={Hello} />
+      <Route path="/lol" component={NotHere} />
+      <Link to="/lol" />
+    </div>
+  );
+
+  const app = getPrefixApp(element);
+  const UniversalEvents = getMockEvents({
+    t,
+    title: '/user/:uuid',
+    page: '/user/:uuid',
+  });
+
+  app.register(UniversalEventsToken, UniversalEvents);
+  app.register(getMockBodySetter());
+  const simulator = setup(app);
+  const ctx = await simulator.render('/user/abcd');
+  t.ok(ctx.rendered.includes('href="/test/lol"'), 'sets links correctly');
+  t.ok(
+    ctx.rendered.includes('<div>Hello</div><div>Hello</div>'),
+    'matches both user routes'
+  );
+  t.ok(!ctx.rendered.includes('NotHere'), 'does not match not here route');
   cleanup();
   t.end();
 });
@@ -161,7 +246,7 @@ if (__BROWSER__) {
 
 function getMockEvents({t, title: expectedTitle, page: expectedPage}) {
   const expected = __NODE__
-    ? ['render:server', 'pageview:server']
+    ? ['pageview:server', 'render:server']
     : ['pageview:browser'];
   return createPlugin({
     provides: () => ({
@@ -178,6 +263,17 @@ function getMockEvents({t, title: expectedTitle, page: expectedPage}) {
         }
       },
     }),
+  });
+}
+
+function getMockBodySetter() {
+  return createPlugin({
+    middleware: () => {
+      return (ctx, next) => {
+        ctx.body = 'mockbody';
+        return next();
+      };
+    },
   });
 }
 
