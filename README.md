@@ -127,7 +127,7 @@ The [universal events](https://github.com/fusionjs/fusion-plugin-universal-event
 
 ---
 
-#### `Router`
+#### Router
 
 Configures a router and acts as a React context provider for routing concerns. You don't need to use a Router component if you use `getRouter`
 
@@ -149,7 +149,7 @@ import {Router} from 'fusion-plugin-react-router';
 * `onRoute: ({page: string, title: string}) => void` - Optional. Called when a route change happens. Provides a pathname and a title.
 * `child: React.Element` - Required.
 
-#### `Route`
+#### Route
 
 Defines what gets rendered for a given route. Multiple routes can be rendered at the same time if they exist outside a `Switch` component.
 
