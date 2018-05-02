@@ -29,3 +29,19 @@ test('misses as expected', t => {
   t.ok(!/Hello/.test(render(el)), 'does not render unmatched route');
   t.end();
 });
+test('support props.children as render prop', t => {
+  const Hello = () => <div>Hello</div>;
+  /* eslint-disable react/no-children-prop */
+  const el = (
+    <Router location="/">
+      <Route path="/" children={() => <Hello />} />
+    </Router>
+  );
+  /* eslint-enable react/no-children-prop */
+  t.doesNotThrow(
+    () => /Hello/.test(render(el)),
+    'does not throw when passing props.children as function to <Route>'
+  );
+  t.ok(/Hello/.test(render(el)), 'renders matched route in server');
+  t.end();
+});
