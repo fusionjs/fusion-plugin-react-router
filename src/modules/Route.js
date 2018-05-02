@@ -46,4 +46,6 @@ Route.contextTypes = {
   onRoute: PropTypes.func.isRequired,
 };
 
+Route.displayName = 'FusionRoute';
+
 export {Route};
