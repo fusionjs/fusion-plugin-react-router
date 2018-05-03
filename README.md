@@ -131,7 +131,7 @@ Provide the UniversalEventsToken when you would like to emit routing events for 
 
 #### Router
 
-Configures a router and acts as a React context provider for routing concerns. It's unlikely you have use the component, given the plugin already provides `<Router>`.
+Configures a router and acts as a React context provider for routing concerns. The plugin already provides `<Router>` in the middleware for your application.
 
 ```jsx
 import {Router} from 'fusion-plugin-react-router';
