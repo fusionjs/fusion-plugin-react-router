@@ -84,7 +84,7 @@ export default createPlugin({
           pageData = JSON.parse(unescape(element.textContent));
         }
         emitter &&
-          emitter.from(ctx).map(payload => {
+          emitter.map(payload => {
             if (payload && typeof payload === 'object') {
               payload.__url__ = pageData.title;
             }
