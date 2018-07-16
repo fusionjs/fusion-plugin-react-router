@@ -189,7 +189,6 @@ import {Router, Route} from 'fusion-plugin-react-router';
 
 See the [react-router documentation for `<Route>`](https://reacttraining.com/react-router/web/api/Route)
 
-The component 
 * `trackingId: string` - Optional. To set an analytical name for the route, and make it the first candidate to determine `payload.title` when emitting [routing events](#routing-events-and-timing-metrics).
 
 #### `Link`
