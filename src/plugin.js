@@ -6,8 +6,8 @@
  * @flow
  */
 
+import * as React from 'react';
 import {UniversalEventsToken} from 'fusion-plugin-universal-events';
-import React from 'react';
 import {createPlugin, createToken, html, unescape, memoize} from 'fusion-core';
 import {Router as ServerRouter} from './server';
 import {Router as BrowserRouter} from './browser';
@@ -15,9 +15,25 @@ import {Router as DefaultProvider} from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import {createServerHistory} from './modules/ServerHistory';
 import type {HistoryType} from './types';
+import type {Token, Context} from 'fusion-core';
 
-export const RouterProviderToken = createToken('RouterProvider');
-export const RouterToken = createToken('Router');
+type ProviderPropsType = {
+  history: HistoryType,
+  basename: string,
+};
+type HistoryWrapperType = {
+  from: (
+    ctx: Context
+  ) => {
+    history: HistoryType,
+  },
+};
+
+export const RouterProviderToken: Token<
+  React.ComponentType<ProviderPropsType>
+> = createToken('RouterProvider');
+
+export const RouterToken: Token<HistoryWrapperType> = createToken('Router');
 
 const Router = __NODE__ ? ServerRouter : BrowserRouter;
 
