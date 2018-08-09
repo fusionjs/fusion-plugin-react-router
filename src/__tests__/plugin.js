@@ -79,6 +79,35 @@ if (__NODE__) {
   });
 }
 
+if (__NODE__) {
+  test('server side redirects to absolute url', async t => {
+    const Hello = () => <div>Hello</div>;
+    const element = (
+      <div>
+        <Redirect from="/example" to="https://www.example.com" />
+      </div>
+    );
+    const app = getPrefixApp(element);
+    // $FlowFixMe
+    app.register(UniversalEventsToken, {
+      map() {},
+      emit() {},
+      from() {
+        return {
+          map() {},
+          emit() {},
+        };
+      },
+    });
+    const simulator = setup(app);
+    const ctx = await simulator.render('/example');
+    t.equal(ctx.status, 307);
+    t.equal(ctx.res.getHeader('Location'), 'https://www.example.com');
+    cleanup();
+    t.end();
+  });
+}
+
 test('events with trackingId', async t => {
   const Hello = () => <div>Hello</div>;
   const element = (
