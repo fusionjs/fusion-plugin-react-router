@@ -62,7 +62,7 @@ export default createPlugin({
             ctx.status = code;
           },
           redirect: url => {
-            ctx.redirect(url);
+            ctx.redirect(prefix + url);
           },
         };
         // Expose the history object

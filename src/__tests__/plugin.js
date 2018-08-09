@@ -58,7 +58,7 @@ if (__NODE__) {
         <Route path="/lol" component={Hello} />
       </div>
     );
-    const app = getApp(element);
+    const app = getPrefixApp(element);
     // $FlowFixMe
     app.register(UniversalEventsToken, {
       map() {},
@@ -73,7 +73,7 @@ if (__NODE__) {
     const simulator = setup(app);
     const ctx = await simulator.render('/');
     t.equal(ctx.status, 307);
-    t.equal(ctx.res.getHeader('Location'), '/lol');
+    t.equal(ctx.res.getHeader('Location'), '/test/lol');
     cleanup();
     t.end();
   });
