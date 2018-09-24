@@ -8,7 +8,14 @@
 
 import * as React from 'react';
 import {UniversalEventsToken} from 'fusion-plugin-universal-events';
-import {createPlugin, createToken, html, unescape, memoize} from 'fusion-core';
+import {
+  createPlugin,
+  createToken,
+  html,
+  unescape,
+  memoize,
+  RoutePrefixToken,
+} from 'fusion-core';
 import {Router as ServerRouter} from './server';
 import {Router as BrowserRouter} from './browser';
 import {Router as DefaultProvider} from 'react-router-dom';
@@ -41,10 +48,18 @@ export default createPlugin({
   deps: {
     emitter: UniversalEventsToken.optional,
     Provider: RouterProviderToken.optional,
+    prefix: RoutePrefixToken.optional,
   },
-  middleware: ({emitter, Provider = DefaultProvider}, self) => {
+  middleware: ({emitter, Provider = DefaultProvider, prefix}, self) => {
     return async (ctx, next) => {
-      const prefix = ctx.prefix || '';
+      if (!prefix) {
+        if (ctx.prefix) {
+          prefix = ctx.prefix;
+        } else {
+          prefix = '';
+        }
+      }
+
       if (!ctx.element) {
         return next();
       }
@@ -125,13 +140,13 @@ export default createPlugin({
             return payload;
           });
         // Expose the history object
-        const history = createBrowserHistory({basename: ctx.prefix});
+        const history = createBrowserHistory({basename: prefix});
         myAPI.history = history;
         ctx.element = (
           <Router
             history={history}
             Provider={Provider}
-            basename={ctx.prefix}
+            basename={prefix}
             onRoute={payload => {
               pageData = payload;
               emitter && emitter.emit('pageview:browser', payload);

@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {UniversalEventsToken} from 'fusion-plugin-universal-events';
-import {createPlugin} from 'fusion-core';
+import {createPlugin, RoutePrefixToken} from 'fusion-core';
 import App from 'fusion-react';
 import {getSimulator} from 'fusion-test-utils';
 import {withRouter, Link} from 'react-router-dom';
@@ -16,12 +16,6 @@ import test from 'tape-cup';
 import {Route} from '../modules/Route';
 import {Redirect} from '../modules/Redirect.js';
 import RouterPlugin, {RouterProviderToken, RouterToken} from '../plugin';
-
-const addRoutePrefix = (ctx, next) => {
-  // hack until we have better route prefix support in fusion-test-utils
-  ctx.prefix = '/test';
-  return next();
-};
 
 function getApp(el) {
   const app = new App(el);
@@ -31,7 +25,7 @@ function getApp(el) {
 
 function getPrefixApp(el) {
   const app = new App(el);
-  app.middleware(addRoutePrefix);
+  app.register(RoutePrefixToken, '/test');
   app.register(RouterPlugin);
   return app;
 }
