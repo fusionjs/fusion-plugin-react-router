@@ -14,7 +14,7 @@ import {Router as BrowserRouter} from './browser';
 import {Router as DefaultProvider} from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import {createServerHistory} from './modules/ServerHistory';
-import type {HistoryType, LocationType} from './types';
+import type {HistoryType} from './types';
 import type {Token, Context, FusionPlugin} from 'fusion-core';
 import {addRoutePrefix} from './modules/utils';
 
