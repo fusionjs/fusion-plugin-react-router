@@ -163,10 +163,17 @@ test('Custom Provider', async t => {
   });
   const simulator = setup(app);
   const {rendered} = await simulator.render('/');
-  const result = __BROWSER__
-    ? // $FlowFixMe
-      document.getElementById('custom-node').textContent
-    : rendered;
+  let result;
+  if (__BROWSER__) {
+    const node = document.getElementById('custom-node');
+    if (!node || !node.textContent) {
+      throw new Error('Could not find node.');
+    }
+    result = node && node.textContent;
+  } else {
+    result = rendered;
+  }
+
   t.ok(result.includes('CUSTOM PROVIDER RESULT'), 'uses custom provider');
   cleanup();
   t.end();
