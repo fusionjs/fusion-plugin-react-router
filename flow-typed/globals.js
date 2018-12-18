@@ -8,4 +8,3 @@
 
 declare var __NODE__: boolean;
 declare var __BROWSER__: boolean;
-declare var __IS_PREPARE__: boolean;
