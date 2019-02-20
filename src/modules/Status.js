@@ -23,9 +23,7 @@ type StatusContextType = {
 export class Status extends React.Component<StatusPropsType> {
   constructor(props: StatusPropsType, context: StatusContextType) {
     super(props, context);
-    const {
-      router: {staticContext} = {},
-    } = context;
+    const {router: {staticContext} = {}} = context;
     if (staticContext && staticContext.setCode) {
       staticContext.setCode(parseInt(this.props.code, 10));
     }
