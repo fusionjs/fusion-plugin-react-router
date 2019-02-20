@@ -18,7 +18,7 @@ test('works in browser', t => {
 
   const el = (
     <MemoryRouter initialEntries={['/test']}>
-      <Route path='/test' render={() => <div>Test</div>} />
+      <Route path="/test" render={() => <div>Test</div>} />
     </MemoryRouter>
   );
   ReactDOM.render(el, root);

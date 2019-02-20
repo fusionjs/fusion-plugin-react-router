@@ -16,7 +16,7 @@ import {MemoryRouter, Route} from '../server.js';
 test('works in server', t => {
   const el = (
     <MemoryRouter initialEntries={['/test']}>
-      <Route path='/test' render={() => <div>Test</div>} />
+      <Route path="/test" render={() => <div>Test</div>} />
     </MemoryRouter>
   );
   t.ok(/Test/.test(render(el)), 'matches');
