@@ -14,7 +14,7 @@ type StatusPropsType = {
   code?: string | number,
 };
 type StatusContextType = {
-  router: {
+  router?: {
     staticContext: {
       setCode: (code: number) => void,
     },
