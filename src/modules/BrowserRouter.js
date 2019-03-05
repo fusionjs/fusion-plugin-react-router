@@ -26,7 +26,7 @@ type PropsType = {|
   children?: React.Node,
 |};
 type ContextType = {
-  __IS_PREPARE__: boolean,
+  __PREPARE_STATE__: any,
 };
 class BrowserRouter extends React.Component<PropsType> {
   lastTitle: ?string;
@@ -43,10 +43,10 @@ class BrowserRouter extends React.Component<PropsType> {
   }
 
   getChildContext() {
-    const {__IS_PREPARE__} = this.context;
+    const {__PREPARE_STATE__} = this.context;
     return {
       onRoute: (routeData: any) => {
-        if (routeData.title !== this.lastTitle && !__IS_PREPARE__) {
+        if (routeData.title !== this.lastTitle && !__PREPARE_STATE__) {
           this.lastTitle = routeData.title;
           this.props.onRoute && this.props.onRoute(routeData);
         }
@@ -74,7 +74,7 @@ BrowserRouter.propTypes = {
 };
 
 BrowserRouter.contextTypes = {
-  __IS_PREPARE__: PropTypes.bool,
+  __PREPARE_STATE__: PropTypes.any,
 };
 
 BrowserRouter.childContextTypes = {
