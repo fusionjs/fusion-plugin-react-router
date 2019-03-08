@@ -129,7 +129,6 @@ const plugin: FusionPlugin<PluginDepsType, HistoryWrapperType> = createPlugin({
           }
         });
       } else if (__BROWSER__) {
-        // TODO(#3): We should consider adding render/downstream/upstream timings for the browser
         let pageData = {};
         const element = document.getElementById('__ROUTER_DATA__');
         if (element) {
