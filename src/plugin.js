@@ -147,9 +147,11 @@ const plugin: FusionPlugin<PluginDepsType, HistoryWrapperType> = createPlugin({
         if (!browserHistory) {
           browserHistory = createBrowserHistory({basename: ctx.prefix});
         }
+        // $FlowFixMe
         myAPI.history = browserHistory;
         ctx.element = (
           <Router
+            // $FlowFixMe
             history={browserHistory}
             Provider={Provider}
             basename={ctx.prefix}
