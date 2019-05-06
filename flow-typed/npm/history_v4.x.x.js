@@ -1,5 +1,19 @@
 // @flow
 declare module 'history' {
+  declare type LocationType = {
+    pathname: string,
+    search: string,
+    hash: string,
+    state?: Object,
+    key?: string,
+  };
+
+  declare function parsePath(path: string | LocationType): LocationType;
+
+  declare function createPath(
+    path: string | LocationType
+  ): string | LocationType;
+
   declare function Unblock(): void;
 
   declare export type Action = 'PUSH' | 'REPLACE' | 'POP';
