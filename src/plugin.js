@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import {Router as DefaultProvider} from 'react-router-dom';
-import createBrowserHistory from 'history/createBrowserHistory';
+import {createBrowserHistory} from 'history';
 
 import {UniversalEventsToken} from 'fusion-plugin-universal-events';
 import {createPlugin, createToken, html, unescape, memoize} from 'fusion-core';
@@ -147,9 +147,11 @@ const plugin: FusionPlugin<PluginDepsType, HistoryWrapperType> = createPlugin({
         if (!browserHistory) {
           browserHistory = createBrowserHistory({basename: ctx.prefix});
         }
+        // $FlowFixMe
         myAPI.history = browserHistory;
         ctx.element = (
           <Router
+            // $FlowFixMe
             history={browserHistory}
             Provider={Provider}
             basename={ctx.prefix}
